@@ -398,16 +398,6 @@ static struct connect_args *extract_connect_args(char *argstr)
 	return cargs;
 }
 
-static void free_connect_args(struct connect_args *cargs)
-{
-	free(cargs->subsysnqn);
-	free(cargs->transport);
-	free(cargs->traddr);
-	free(cargs->trsvcid);
-	free(cargs->host_traddr);
-	free(cargs);
-}
-
 static void track_ctrl(char *argstr)
 {
 	struct connect_args *cargs;
@@ -1354,30 +1344,6 @@ static int do_discover(char *argstr, bool connect, enum nvme_print_flags flags)
 	int instance, numrec = 0, ret, err;
 	int status = 0;
 
-	if (cfg.device) {
-		struct connect_args *cargs;
-
-		cargs = extract_connect_args(argstr);
-		if (!cargs)
-			return -ENOMEM;
-
-		/*
-		 * if the cfg.device passed in matches the connect args
-		 *    cfg.device is left as-is
-		 * else if there exists a controller that matches the
-		 *         connect args
-		 *    cfg.device is the matching ctrl name
-		 * else if no ctrl matches the connect args
-		 *    cfg.device is set to null. This will attempt to
-		 *    create a new ctrl.
-		 * endif
-		 */
-		if (!ctrl_matches_connectargs(cfg.device, cargs))
-			cfg.device = find_ctrl_with_connectargs(cargs);
-
-		free_connect_args(cargs);
-	}
-
 	if (!cfg.device) {
 		instance = add_ctrl(argstr);
 	} else {
@@ -1560,25 +1526,26 @@ int fabrics_discover(const char *desc, int argc, char **argv, bool connect)
 
 	cfg.nqn = NVME_DISC_SUBSYS_NAME;
 
-	if (!cfg.transport && !cfg.traddr) {
+	if (!cfg.transport && !cfg.traddr && !cfg.device) {
 		ret = discover_from_conf_file(desc, argstr, opts, connect);
 	} else {
-		if (cfg.persistent && !cfg.keep_alive_tmo)
-			cfg.keep_alive_tmo = NVMF_DEF_DISC_TMO;
+		if (!cfg.device) {
+			if (cfg.persistent && !cfg.keep_alive_tmo)
+				cfg.keep_alive_tmo = NVMF_DEF_DISC_TMO;
 
-		if (traddr_is_hostname(&cfg)) {
-			ret = hostname2traddr(&cfg);
+			if (traddr_is_hostname(&cfg)) {
+				ret = hostname2traddr(&cfg);
+				if (ret)
+					goto out;
+			}
+
+			if (!cfg.trsvcid)
+				discovery_trsvcid(&cfg);
+
+			ret = build_options(argstr, BUF_SIZE, true);
 			if (ret)
 				goto out;
 		}
-
-		if (!cfg.trsvcid)
-			discovery_trsvcid(&cfg);
-
-		ret = build_options(argstr, BUF_SIZE, true);
-		if (ret)
-			goto out;
-
 		ret = do_discover(argstr, connect, flags);
 	}
 
