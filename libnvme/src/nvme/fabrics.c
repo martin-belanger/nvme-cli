@@ -2613,7 +2613,7 @@ __libnvme_public int libnvmf_nbft_read_files(
 		snprintf(filename, sizeof(filename), "%s/%s", path,
 			dent[i]->d_name);
 
-		ret = libnvme_read_nbft(ctx, &nbft, filename);
+		ret = libnvmf_read_nbft(ctx, &nbft, filename);
 		if (!ret) {
 			struct nbft_file_entry *new;
 
@@ -2644,7 +2644,7 @@ __libnvme_public void libnvmf_nbft_free(
 	while (head) {
 		struct nbft_file_entry *next = head->next;
 
-		libnvme_free_nbft(ctx, head->nbft);
+		libnvmf_free_nbft(ctx, head->nbft);
 		free(head);
 
 		head = next;
