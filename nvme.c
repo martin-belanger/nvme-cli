@@ -549,7 +549,7 @@ static int get_smart_log(int argc, char **argv, struct command *acmd, struct plu
 	if (cfg.human_readable || argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	smart_log = nvme_alloc(sizeof(*smart_log));
+	smart_log = libnvme_alloc(sizeof(*smart_log));
 	if (!smart_log)
 		return -ENOMEM;
 
@@ -603,7 +603,7 @@ static int get_ana_log(int argc, char **argv, struct command *acmd,
 		return err;
 	}
 
-	ctrl = nvme_alloc(sizeof(*ctrl));
+	ctrl = libnvme_alloc(sizeof(*ctrl));
 	if (!ctrl)
 		return -ENOMEM;
 
@@ -621,7 +621,7 @@ static int get_ana_log(int argc, char **argv, struct command *acmd,
 		return -ENOMEM;
 	}
 
-	ana_log = nvme_alloc(ana_log_len);
+	ana_log = libnvme_alloc(ana_log_len);
 	if (!ana_log)
 		return -ENOMEM;
 
@@ -692,7 +692,7 @@ static int get_log_telemetry_ctrl(struct libnvme_transport_handle *hdl, bool rae
 	struct nvme_telemetry_log *log;
 	int err;
 
-	log = nvme_alloc(size);
+	log = libnvme_alloc(size);
 	if (!log)
 		return -ENOMEM;
 
@@ -712,7 +712,7 @@ static int get_log_telemetry_host(struct libnvme_transport_handle *hdl, size_t s
 	struct nvme_telemetry_log *log;
 	int err;
 
-	log = nvme_alloc(size);
+	log = libnvme_alloc(size);
 	if (!log)
 		return -ENOMEM;
 
@@ -735,7 +735,7 @@ static int __create_telemetry_log_host(struct libnvme_transport_handle *hdl,
 	__cleanup_free struct nvme_telemetry_log *log = NULL;
 	int err;
 
-	log = nvme_alloc(sizeof(*log));
+	log = libnvme_alloc(sizeof(*log));
 	if (!log)
 		return -ENOMEM;
 
@@ -760,7 +760,7 @@ static int __get_telemetry_log_ctrl(struct libnvme_transport_handle *hdl,
 	struct nvme_telemetry_log *log;
 	int err;
 
-	log = nvme_alloc(NVME_LOG_TELEM_BLOCK_SIZE);
+	log = libnvme_alloc(NVME_LOG_TELEM_BLOCK_SIZE);
 	if (!log)
 		return -ENOMEM;
 
@@ -807,7 +807,7 @@ static int __get_telemetry_log_host(struct libnvme_transport_handle *hdl,
 	__cleanup_free struct nvme_telemetry_log *log = NULL;
 	int err;
 
-	log = nvme_alloc(sizeof(*log));
+	log = libnvme_alloc(sizeof(*log));
 	if (!log)
 		return -ENOMEM;
 
@@ -899,7 +899,7 @@ static int get_telemetry_log(int argc, char **argv, struct command *acmd,
 	}
 
 	if (cfg.data_area == 4) {
-		id_ctrl = nvme_alloc(sizeof(*id_ctrl));
+		id_ctrl = libnvme_alloc(sizeof(*id_ctrl));
 		if (!id_ctrl)
 			return -ENOMEM;
 
@@ -931,7 +931,7 @@ static int get_telemetry_log(int argc, char **argv, struct command *acmd,
 		return output;
 	}
 
-	log = nvme_alloc(sizeof(*log));
+	log = libnvme_alloc(sizeof(*log));
 	if (!log)
 		return -ENOMEM;
 
@@ -1026,7 +1026,7 @@ static int get_endurance_log(int argc, char **argv, struct command *acmd, struct
 		return err;
 	}
 
-	endurance_log = nvme_alloc(sizeof(*endurance_log));
+	endurance_log = libnvme_alloc(sizeof(*endurance_log));
 	if (!endurance_log)
 		return -ENOMEM;
 
@@ -1048,7 +1048,7 @@ static int collect_effects_log(struct libnvme_transport_handle *hdl, enum nvme_c
 	nvme_effects_log_node_t *node;
 	int err;
 
-	node = nvme_alloc(sizeof(*node));
+	node = libnvme_alloc(sizeof(*node));
 	if (!node)
 		return -ENOMEM;
 
@@ -1184,7 +1184,7 @@ static int get_supported_log_pages(int argc, char **argv, struct command *acmd,
 	if (argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	supports = nvme_alloc(sizeof(*supports));
+	supports = libnvme_alloc(sizeof(*supports));
 	if (!supports)
 		return -ENOMEM;
 
@@ -1274,7 +1274,7 @@ static int get_error_log(int argc, char **argv, struct command *acmd, struct plu
 	}
 
 	cfg.log_entries = min(cfg.log_entries, ctrl.elpe + 1);
-	err_log = nvme_alloc(cfg.log_entries * sizeof(struct nvme_error_log_page));
+	err_log = libnvme_alloc(cfg.log_entries * sizeof(struct nvme_error_log_page));
 	if (!err_log)
 		return -ENOMEM;
 
@@ -1326,7 +1326,7 @@ static int get_fw_log(int argc, char **argv, struct command *acmd, struct plugin
 	if (cfg.raw_binary)
 		flags = BINARY;
 
-	fw_log = nvme_alloc(sizeof(*fw_log));
+	fw_log = libnvme_alloc(sizeof(*fw_log));
 	if (!fw_log)
 		return -ENOMEM;
 
@@ -1379,7 +1379,7 @@ static int get_changed_ns_list_log(int argc, char **argv, bool alloc)
 	if (cfg.raw_binary)
 		flags = BINARY;
 
-	changed_ns_list_log = nvme_alloc(sizeof(*changed_ns_list_log));
+	changed_ns_list_log = libnvme_alloc(sizeof(*changed_ns_list_log));
 	if (!changed_ns_list_log)
 		return -ENOMEM;
 
@@ -1455,7 +1455,7 @@ static int get_pred_lat_per_nvmset_log(int argc, char **argv,
 	if (cfg.raw_binary)
 		flags = BINARY;
 
-	plpns_log = nvme_alloc(sizeof(*plpns_log));
+	plpns_log = libnvme_alloc(sizeof(*plpns_log));
 	if (!plpns_log)
 		return -ENOMEM;
 
@@ -1523,7 +1523,7 @@ static int get_pred_lat_event_agg_log(int argc, char **argv,
 		return -EINVAL;
 	}
 
-	ctrl = nvme_alloc(sizeof(*ctrl));
+	ctrl = libnvme_alloc(sizeof(*ctrl));
 	if (!ctrl)
 		return -ENOMEM;
 
@@ -1536,7 +1536,7 @@ static int get_pred_lat_event_agg_log(int argc, char **argv,
 	cfg.log_entries = min(cfg.log_entries, le32_to_cpu(ctrl->nsetidmax));
 	log_size = sizeof(__u64) + cfg.log_entries * sizeof(__u16);
 
-	pea_log = nvme_alloc(log_size);
+	pea_log = libnvme_alloc(log_size);
 	if (!pea_log)
 		return -ENOMEM;
 
@@ -1602,7 +1602,7 @@ static int get_persistent_event_log(int argc, char **argv,
 	if (cfg.raw_binary)
 		flags = BINARY;
 
-	pevent = nvme_alloc(sizeof(*pevent));
+	pevent = libnvme_alloc(sizeof(*pevent));
 	if (!pevent)
 		return -ENOMEM;
 
@@ -1719,7 +1719,7 @@ static int get_endurance_event_agg_log(int argc, char **argv,
 		return -EINVAL;
 	}
 
-	ctrl = nvme_alloc(sizeof(*ctrl));
+	ctrl = libnvme_alloc(sizeof(*ctrl));
 	if (!ctrl)
 		return -ENOMEM;
 
@@ -1735,7 +1735,7 @@ static int get_endurance_event_agg_log(int argc, char **argv,
 	cfg.log_entries = min(cfg.log_entries, le16_to_cpu(ctrl->endgidmax));
 	log_size = sizeof(__u64) + cfg.log_entries * sizeof(__u16);
 
-	endurance_log = nvme_alloc(log_size);
+	endurance_log = libnvme_alloc(log_size);
 	if (!endurance_log)
 		return -ENOMEM;
 
@@ -1792,7 +1792,7 @@ static int get_lba_status_log(int argc, char **argv,
 		return err;
 	}
 
-	lba_status = nvme_alloc(lslplen);
+	lba_status = libnvme_alloc(lslplen);
 	if (!lba_status)
 		return -ENOMEM;
 
@@ -1834,7 +1834,7 @@ static int get_resv_notif_log(int argc, char **argv,
 		return err;
 	}
 
-	resv = nvme_alloc(sizeof(*resv));
+	resv = libnvme_alloc(sizeof(*resv));
 	if (!resv)
 		return -ENOMEM;
 
@@ -1908,7 +1908,7 @@ static int get_boot_part_log(int argc, char **argv, struct command *acmd, struct
 		return output;
 	}
 
-	boot = nvme_alloc(sizeof(*boot));
+	boot = libnvme_alloc(sizeof(*boot));
 	if (!boot)
 		return -ENOMEM;
 
@@ -1919,7 +1919,7 @@ static int get_boot_part_log(int argc, char **argv, struct command *acmd, struct
 	}
 
 	bpsz = (boot->bpinfo & 0x7fff) * 128 * 1024;
-	bp_log = nvme_alloc(sizeof(*boot) + bpsz);
+	bp_log = libnvme_alloc(sizeof(*boot) + bpsz);
 	if (!bp_log)
 		return -ENOMEM;
 
@@ -1994,7 +1994,7 @@ static int get_phy_rx_eom_log(int argc, char **argv, struct command *acmd,
 
 	/* Fetching header to calculate total log length */
 	phy_rx_eom_log_len = sizeof(struct nvme_phy_rx_eom_log);
-	phy_rx_eom_log = nvme_alloc(phy_rx_eom_log_len);
+	phy_rx_eom_log = libnvme_alloc(phy_rx_eom_log_len);
 	if (!phy_rx_eom_log)
 		return -ENOMEM;
 
@@ -2015,7 +2015,7 @@ static int get_phy_rx_eom_log(int argc, char **argv, struct command *acmd,
 	else
 		phy_rx_eom_log_len = le16_to_cpu(phy_rx_eom_log->hsize);
 
-	phy_rx_eom_log = nvme_realloc(phy_rx_eom_log, phy_rx_eom_log_len);
+	phy_rx_eom_log = libnvme_realloc(phy_rx_eom_log, phy_rx_eom_log_len);
 	if (!phy_rx_eom_log)
 		return -ENOMEM;
 
@@ -2069,7 +2069,7 @@ static int get_media_unit_stat_log(int argc, char **argv, struct command *acmd,
 	if (cfg.raw_binary)
 		flags = BINARY;
 
-	mus = nvme_alloc(sizeof(*mus));
+	mus = libnvme_alloc(sizeof(*mus));
 	if (!mus)
 		return -ENOMEM;
 
@@ -2122,7 +2122,7 @@ static int get_supp_cap_config_log(int argc, char **argv, struct command *acmd,
 	if (cfg.raw_binary)
 		flags = BINARY;
 
-	cap_log = nvme_alloc(sizeof(*cap_log));
+	cap_log = libnvme_alloc(sizeof(*cap_log));
 	if (!cap_log)
 		return -ENOMEM;
 
@@ -2181,7 +2181,7 @@ static int io_mgmt_send(int argc, char **argv, struct command *acmd, struct plug
 	}
 
 	if (cfg.data_len) {
-		buf = nvme_alloc(cfg.data_len);
+		buf = libnvme_alloc(cfg.data_len);
 		if (!buf)
 			return -ENOMEM;
 	}
@@ -2257,7 +2257,7 @@ static int io_mgmt_recv(int argc, char **argv, struct command *acmd, struct plug
 	}
 
 	if (cfg.data_len) {
-		buf = nvme_alloc(cfg.data_len);
+		buf = libnvme_alloc(cfg.data_len);
 		if (!buf)
 			return -ENOMEM;
 	}
@@ -2444,7 +2444,7 @@ static int get_log(int argc, char **argv, struct command *acmd, struct plugin *p
 		return -EINVAL;
 	}
 
-	log = nvme_alloc(cfg.log_len);
+	log = libnvme_alloc(cfg.log_len);
 	if (!log)
 		return -ENOMEM;
 
@@ -2549,7 +2549,7 @@ static int sanitize_log(int argc, char **argv, struct command *acmd, struct plug
 	if (cfg.human_readable || argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	sanitize_log = nvme_alloc(sizeof(*sanitize_log));
+	sanitize_log = libnvme_alloc(sizeof(*sanitize_log));
 	if (!sanitize_log)
 		return -ENOMEM;
 
@@ -2600,7 +2600,7 @@ static int get_fid_support_effects_log(int argc, char **argv, struct command *ac
 	if (cfg.human_readable || argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	fid_support_log = nvme_alloc(sizeof(*fid_support_log));
+	fid_support_log = libnvme_alloc(sizeof(*fid_support_log));
 	if (!fid_support_log)
 		return -ENOMEM;
 
@@ -2652,7 +2652,7 @@ static int get_mi_cmd_support_effects_log(int argc, char **argv, struct command 
 	if (cfg.human_readable || argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	mi_cmd_support_log = nvme_alloc(sizeof(*mi_cmd_support_log));
+	mi_cmd_support_log = libnvme_alloc(sizeof(*mi_cmd_support_log));
 	if (!mi_cmd_support_log)
 		return -ENOMEM;
 
@@ -2705,7 +2705,7 @@ static int list_ctrl(int argc, char **argv, struct command *acmd, struct plugin 
 		return err;
 	}
 
-	cntlist = nvme_alloc(sizeof(*cntlist));
+	cntlist = libnvme_alloc(sizeof(*cntlist));
 	if (!cntlist)
 		return -ENOMEM;
 
@@ -2776,7 +2776,7 @@ static int list_ns(int argc, char **argv, struct command *acmd, struct plugin *p
 	if (argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	ns_list = nvme_alloc(sizeof(*ns_list));
+	ns_list = libnvme_alloc(sizeof(*ns_list));
 	if (!ns_list)
 		return -ENOMEM;
 
@@ -2840,7 +2840,7 @@ static int id_ns_lba_format(int argc, char **argv, struct command *acmd, struct 
 	if (argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	ns = nvme_alloc(sizeof(*ns));
+	ns = libnvme_alloc(sizeof(*ns));
 	if (!ns)
 		return -ENOMEM;
 
@@ -2892,7 +2892,7 @@ static int id_endurance_grp_list(int argc, char **argv, struct command *acmd,
 		return -EINVAL;
 	}
 
-	endgrp_list = nvme_alloc(sizeof(*endgrp_list));
+	endgrp_list = libnvme_alloc(sizeof(*endgrp_list));
 	if (!endgrp_list)
 		return -ENOMEM;
 
@@ -2913,7 +2913,7 @@ static bool is_ns_mgmt_support(struct libnvme_transport_handle *hdl)
 {
 	int err;
 
-	__cleanup_free struct nvme_id_ctrl *ctrl = nvme_alloc(sizeof(*ctrl));
+	__cleanup_free struct nvme_id_ctrl *ctrl = libnvme_alloc(sizeof(*ctrl));
 
 	if (ctrl)
 		return false;
@@ -3066,7 +3066,7 @@ static int nvme_attach_ns(int argc, char **argv, int attach, const char *desc, s
 		return -EINVAL;
 	}
 
-	cntlist = nvme_alloc(sizeof(*cntlist));
+	cntlist = libnvme_alloc(sizeof(*cntlist));
 	if (!cntlist)
 		return -ENOMEM;
 
@@ -3145,7 +3145,7 @@ static int parse_lba_num_si(struct libnvme_transport_handle *hdl, const char *op
 		return err;
 	}
 
-	ctrl = nvme_alloc(sizeof(*ctrl));
+	ctrl = libnvme_alloc(sizeof(*ctrl));
 	if (!ctrl)
 		return -ENOMEM;
 
@@ -3155,7 +3155,7 @@ static int parse_lba_num_si(struct libnvme_transport_handle *hdl, const char *op
 		return err;
 	}
 
-	ns_list = nvme_alloc(sizeof(*ns_list));
+	ns_list = libnvme_alloc(sizeof(*ns_list));
 	if (!ns_list)
 		return -ENOMEM;
 
@@ -3170,7 +3170,7 @@ static int parse_lba_num_si(struct libnvme_transport_handle *hdl, const char *op
 		nsid = le32_to_cpu(ns_list->ns[0]);
 	}
 
-	ns = nvme_alloc(sizeof(*ns));
+	ns = libnvme_alloc(sizeof(*ns));
 	if (!ns)
 		return -ENOMEM;
 
@@ -3337,7 +3337,7 @@ static int create_ns(int argc, char **argv, struct command *acmd, struct plugin 
 		}
 
 
-		ns = nvme_alloc(sizeof(*ns));
+		ns = libnvme_alloc(sizeof(*ns));
 		if (!ns)
 			return -ENOMEM;
 
@@ -3364,7 +3364,7 @@ static int create_ns(int argc, char **argv, struct command *acmd, struct plugin 
 		return -EINVAL;
 	}
 
-	id = nvme_alloc(sizeof(*id));
+	id = libnvme_alloc(sizeof(*id));
 	if (!id)
 		return -ENOMEM;
 
@@ -3377,7 +3377,7 @@ static int create_ns(int argc, char **argv, struct command *acmd, struct plugin 
 	}
 
 	if (id->ctratt & NVME_CTRL_CTRATT_NAMESPACE_GRANULARITY) {
-		gr_list = nvme_alloc(sizeof(*gr_list));
+		gr_list = libnvme_alloc(sizeof(*gr_list));
 		if (!gr_list)
 			return -ENOMEM;
 
@@ -3427,7 +3427,7 @@ parse_lba:
 		return -EINVAL;
 	}
 
-	data = nvme_alloc(sizeof(*data));
+	data = libnvme_alloc(sizeof(*data));
 	if (!data)
 		return -ENOMEM;
 
@@ -3658,7 +3658,7 @@ int __id_ctrl(int argc, char **argv, struct command *acmd, struct plugin *plugin
 	if (cfg.human_readable || argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	ctrl = nvme_alloc(sizeof(*ctrl));
+	ctrl = libnvme_alloc(sizeof(*ctrl));
 	if (!ctrl)
 		return -ENOMEM;
 
@@ -3707,7 +3707,7 @@ static int nvm_id_ctrl(int argc, char **argv, struct command *acmd,
 	if (argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	ctrl_nvm = nvme_alloc(sizeof(*ctrl_nvm));
+	ctrl_nvm = libnvme_alloc(sizeof(*ctrl_nvm));
 	if (!ctrl_nvm)
 		return -ENOMEM;
 
@@ -3772,7 +3772,7 @@ static int nvm_id_ns(int argc, char **argv, struct command *acmd,
 		}
 	}
 
-	ns = nvme_alloc(sizeof(*ns));
+	ns = libnvme_alloc(sizeof(*ns));
 	if (!ns)
 		return -ENOMEM;
 
@@ -3782,7 +3782,7 @@ static int nvm_id_ns(int argc, char **argv, struct command *acmd,
 		return err;
 	}
 
-	id_ns = nvme_alloc(sizeof(*id_ns));
+	id_ns = libnvme_alloc(sizeof(*id_ns));
 	if (!id_ns)
 		return -ENOMEM;
 
@@ -3838,7 +3838,7 @@ static int nvm_id_ns_lba_format(int argc, char **argv, struct command *acmd, str
 	if (argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	ns = nvme_alloc(sizeof(*ns));
+	ns = libnvme_alloc(sizeof(*ns));
 	if (!ns)
 		return -ENOMEM;
 
@@ -3848,7 +3848,7 @@ static int nvm_id_ns_lba_format(int argc, char **argv, struct command *acmd, str
 		ns->nulbaf = 0;
 	}
 
-	nvm_ns = nvme_alloc(sizeof(*nvm_ns));
+	nvm_ns = libnvme_alloc(sizeof(*nvm_ns));
 	if (!nvm_ns)
 		return -ENOMEM;
 
@@ -3917,7 +3917,7 @@ static int ns_descs(int argc, char **argv, struct command *acmd, struct plugin *
 		}
 	}
 
-	nsdescs = nvme_alloc(NVME_IDENTIFY_DATA_SIZE);
+	nsdescs = libnvme_alloc(NVME_IDENTIFY_DATA_SIZE);
 	if (!nsdescs)
 		return -ENOMEM;
 
@@ -3998,7 +3998,7 @@ static int id_ns(int argc, char **argv, struct command *acmd, struct plugin *plu
 		}
 	}
 
-	ns = nvme_alloc(sizeof(*ns));
+	ns = libnvme_alloc(sizeof(*ns));
 	if (!ns)
 		return -ENOMEM;
 
@@ -4074,7 +4074,7 @@ static int cmd_set_independent_id_ns(int argc, char **argv, struct command *acmd
 		}
 	}
 
-	ns = nvme_alloc(sizeof(*ns));
+	ns = libnvme_alloc(sizeof(*ns));
 	if (!ns)
 		return -ENOMEM;
 
@@ -4116,7 +4116,7 @@ static int id_ns_granularity(int argc, char **argv, struct command *acmd, struct
 		return err;
 	}
 
-	granularity_list = nvme_alloc(NVME_IDENTIFY_DATA_SIZE);
+	granularity_list = libnvme_alloc(NVME_IDENTIFY_DATA_SIZE);
 	if (!granularity_list)
 		return -ENOMEM;
 
@@ -4167,7 +4167,7 @@ static int id_nvmset(int argc, char **argv, struct command *acmd, struct plugin 
 		return err;
 	}
 
-	nvmset = nvme_alloc(sizeof(*nvmset));
+	nvmset = libnvme_alloc(sizeof(*nvmset));
 	if (!nvmset)
 		return -ENOMEM;
 
@@ -4228,7 +4228,7 @@ static int id_uuid(int argc, char **argv, struct command *acmd, struct plugin *p
 	if (cfg.human_readable || argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	uuid_list = nvme_alloc(sizeof(*uuid_list));
+	uuid_list = libnvme_alloc(sizeof(*uuid_list));
 	if (!uuid_list)
 		return -ENOMEM;
 
@@ -4281,7 +4281,7 @@ static int id_iocs(int argc, char **argv, struct command *acmd, struct plugin *p
 	if (argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	iocs = nvme_alloc(sizeof(*iocs));
+	iocs = libnvme_alloc(sizeof(*iocs));
 	if (!iocs)
 		return -ENOMEM;
 
@@ -4333,7 +4333,7 @@ static int id_domain(int argc, char **argv, struct command *acmd, struct plugin 
 		return err;
 	}
 
-	id_domain = nvme_alloc(sizeof(*id_domain));
+	id_domain = libnvme_alloc(sizeof(*id_domain));
 	if (!id_domain)
 		return -ENOMEM;
 
@@ -4485,7 +4485,7 @@ static int primary_ctrl_caps(int argc, char **argv, struct command *acmd, struct
 	if (cfg.human_readable || argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	caps = nvme_alloc(sizeof(*caps));
+	caps = libnvme_alloc(sizeof(*caps));
 	if (!caps)
 		return -ENOMEM;
 
@@ -4544,7 +4544,7 @@ static int list_secondary_ctrl(int argc, char **argv, struct command *acmd, stru
 		return -EINVAL;
 	}
 
-	sc_list = nvme_alloc(sizeof(*sc_list));
+	sc_list = libnvme_alloc(sizeof(*sc_list));
 	if (!sc_list)
 		return -ENOMEM;
 
@@ -4582,11 +4582,11 @@ static int wait_self_test(struct libnvme_transport_handle *hdl)
 	int err, i = 0, p = 0, cnt = 0;
 	int wthr;
 
-	ctrl = nvme_alloc(sizeof(*ctrl));
+	ctrl = libnvme_alloc(sizeof(*ctrl));
 	if (!ctrl)
 		return -ENOMEM;
 
-	log = nvme_alloc(sizeof(*log));
+	log = libnvme_alloc(sizeof(*log));
 	if (!log)
 		return -ENOMEM;
 
@@ -4715,7 +4715,7 @@ static int device_self_test(int argc, char **argv, struct command *acmd, struct 
 	if (cfg.stc == NVME_ST_CODE_RESERVED) {
 		__cleanup_free struct nvme_self_test_log *log = NULL;
 
-		log = nvme_alloc(sizeof(*log));
+		log = libnvme_alloc(sizeof(*log));
 		if (!log)
 			return -ENOMEM;
 
@@ -4806,7 +4806,7 @@ static int self_test_log(int argc, char **argv, struct command *acmd, struct plu
 	if (argconfig_parse_seen(opts, "verbose"))
 		flags |= VERBOSE;
 
-	log = nvme_alloc(sizeof(*log));
+	log = libnvme_alloc(sizeof(*log));
 	if (!log)
 		return -ENOMEM;
 
@@ -4839,7 +4839,7 @@ static int get_feature_id(struct libnvme_transport_handle *hdl, struct feat_cfg 
 		cfg->data_len = 0;
 
 	if (cfg->data_len) {
-		*buf = nvme_alloc(cfg->data_len - 1);
+		*buf = libnvme_alloc(cfg->data_len - 1);
 		if (!*buf)
 			return -1;
 	}
@@ -5282,7 +5282,7 @@ static bool fw_commit_support_mud(struct libnvme_transport_handle *hdl)
 	__cleanup_free struct nvme_id_ctrl *ctrl = NULL;
 	int err;
 
-	ctrl = nvme_alloc(sizeof(*ctrl));
+	ctrl = libnvme_alloc(sizeof(*ctrl));
 	if (!ctrl)
 		return false;
 
@@ -6712,7 +6712,7 @@ static int format_cmd(int argc, char **argv, struct command *acmd, struct plugin
 		}
 	}
 
-	ctrl = nvme_alloc(sizeof(*ctrl));
+	ctrl = libnvme_alloc(sizeof(*ctrl));
 	if (!ctrl)
 		return -ENOMEM;
 
@@ -6745,7 +6745,7 @@ static int format_cmd(int argc, char **argv, struct command *acmd, struct plugin
 	}
 
 	if (cfg.namespace_id != NVME_NSID_ALL) {
-		ns = nvme_alloc(sizeof(*ns));
+		ns = libnvme_alloc(sizeof(*ns));
 		if (!ns)
 			return -ENOMEM;
 
@@ -6960,7 +6960,7 @@ static int set_feature(int argc, char **argv, struct command *acmd, struct plugi
 					 &cfg.data_len);
 
 	if (cfg.data_len) {
-		buf = nvme_alloc(cfg.data_len);
+		buf = libnvme_alloc(cfg.data_len);
 		if (!buf)
 			return -ENOMEM;
 	}
@@ -7104,7 +7104,7 @@ static int sec_send(int argc, char **argv, struct command *acmd, struct plugin *
 		sec_size = cfg.tl > sb.st_size ? cfg.tl : sb.st_size;
 	}
 
-	sec_buf = nvme_alloc(cfg.tl);
+	sec_buf = libnvme_alloc(cfg.tl);
 	if (!sec_buf)
 		return -ENOMEM;
 
@@ -7222,7 +7222,7 @@ static int dir_send(int argc, char **argv, struct command *acmd, struct plugin *
 	}
 
 	if (cfg.data_len) {
-		buf = nvme_alloc(cfg.data_len);
+		buf = libnvme_alloc(cfg.data_len);
 		if (!buf)
 			return -ENOMEM;
 	}
@@ -7393,7 +7393,7 @@ static int get_pi_info(struct libnvme_transport_handle *hdl,
 	__u16 ms;
 	int err;
 
-	ns = nvme_alloc(sizeof(*ns));
+	ns = libnvme_alloc(sizeof(*ns));
 	if (!ns)
 		return -ENOMEM;
 
@@ -7407,7 +7407,7 @@ static int get_pi_info(struct libnvme_transport_handle *hdl,
 	lbs = 1 << ns->lbaf[lba_index].ds;
 	ms = le16_to_cpu(ns->lbaf[lba_index].ms);
 
-	nvm_ns = nvme_alloc(sizeof(*nvm_ns));
+	nvm_ns = libnvme_alloc(sizeof(*nvm_ns));
 	if (!nvm_ns)
 		return -ENOMEM;
 
@@ -7452,7 +7452,7 @@ static int init_pi_tags(struct libnvme_transport_handle *hdl,
 	__u8 sts = 0, pif = 0;
 	int err = 0;
 
-	ns = nvme_alloc(sizeof(*ns));
+	ns = libnvme_alloc(sizeof(*ns));
 	if (!ns)
 		return -ENOMEM;
 
@@ -7462,7 +7462,7 @@ static int init_pi_tags(struct libnvme_transport_handle *hdl,
 		return err;
 	}
 
-	nvm_ns = nvme_alloc(sizeof(*nvm_ns));
+	nvm_ns = libnvme_alloc(sizeof(*nvm_ns));
 	if (!nvm_ns)
 		return -ENOMEM;
 
@@ -7712,7 +7712,7 @@ static int dsm(int argc, char **argv, struct command *acmd, struct plugin *plugi
 		cfg.idr = NVME_GET(cfg.cdw11, DSM_CDW11_IDR);
 	}
 
-	dsm = nvme_alloc(sizeof(*dsm) * nb);
+	dsm = libnvme_alloc(sizeof(*dsm) * nb);
 	if (!dsm)
 		return -ENOMEM;
 
@@ -7907,7 +7907,7 @@ static int copy_cmd(int argc, char **argv, struct command *acmd, struct plugin *
 		}
 	}
 
-	copy = nvme_alloc(sizeof(*copy));
+	copy = libnvme_alloc(sizeof(*copy));
 	if (!copy)
 		return -ENOMEM;
 
@@ -8300,7 +8300,7 @@ static int resv_report(int argc, char **argv, struct command *acmd, struct plugi
 
 	size = (cfg.numd + 1) << 2;
 
-	ctrl = nvme_alloc(sizeof(*ctrl));
+	ctrl = libnvme_alloc(sizeof(*ctrl));
 	if (!ctrl)
 		return -ENOMEM;
 
@@ -8313,7 +8313,7 @@ static int resv_report(int argc, char **argv, struct command *acmd, struct plugi
 	if (ctrl->ctratt & NVME_CTRL_CTRATT_128_ID)
 		cfg.eds = true;
 
-	status = nvme_alloc(size);
+	status = libnvme_alloc(size);
 	if (!status)
 		return -ENOMEM;
 
@@ -8848,7 +8848,7 @@ static int sec_recv(int argc, char **argv, struct command *acmd, struct plugin *
 	}
 
 	if (cfg.size) {
-		sec_buf = nvme_alloc(cfg.size);
+		sec_buf = libnvme_alloc(cfg.size);
 		if (!sec_buf)
 			return -ENOMEM;
 	}
@@ -8940,7 +8940,7 @@ static int get_lba_status(int argc, char **argv, struct command *acmd,
 	}
 
 	buf_len = (cfg.mndw + 1) * 4;
-	buf = nvme_alloc(buf_len);
+	buf = libnvme_alloc(buf_len);
 	if (!buf)
 		return -ENOMEM;
 
@@ -9138,7 +9138,7 @@ static int dir_receive(int argc, char **argv, struct command *acmd, struct plugi
 	}
 
 	if (cfg.data_len) {
-		buf = nvme_alloc(cfg.data_len);
+		buf = libnvme_alloc(cfg.data_len);
 		if (!buf)
 			return -ENOMEM;
 	}
@@ -10602,7 +10602,7 @@ static int get_mgmt_addr_list_log(int argc, char **argv, struct command *acmd, s
 		return err;
 	}
 
-	ma_log = nvme_alloc(sizeof(*ma_log));
+	ma_log = libnvme_alloc(sizeof(*ma_log));
 	if (!ma_log)
 		return -ENOMEM;
 
@@ -10649,7 +10649,7 @@ static int get_rotational_media_info_log(int argc, char **argv, struct command *
 		return err;
 	}
 
-	info = nvme_alloc(sizeof(*info));
+	info = libnvme_alloc(sizeof(*info));
 	if (!info)
 		return -ENOMEM;
 
@@ -10670,7 +10670,7 @@ static int get_dispersed_ns_psub(struct libnvme_transport_handle *hdl, __u32 nsi
 	int err;
 	__u64 header_len = sizeof(**logp);
 	__u64 psub_list_len;
-	struct nvme_dispersed_ns_participating_nss_log *log = nvme_alloc(header_len);
+	struct nvme_dispersed_ns_participating_nss_log *log = libnvme_alloc(header_len);
 	struct libnvme_passthru_cmd cmd;
 
 	if (!log)
@@ -10682,7 +10682,7 @@ static int get_dispersed_ns_psub(struct libnvme_transport_handle *hdl, __u32 nsi
 
 	psub_list_len = le64_to_cpu(log->numpsub) * NVME_NQN_LENGTH;
 
-	log = nvme_realloc(log, header_len + psub_list_len);
+	log = libnvme_realloc(log, header_len + psub_list_len);
 	if (!log) {
 		err = -ENOMEM;
 		goto err_free;
@@ -10789,7 +10789,7 @@ static int get_power_measurement_log(int argc, char **argv, struct command *acmd
 		flags |= VERBOSE;
 
 	/* First read minimum size to discover the full log size */
-	log = nvme_alloc(min_log_size);
+	log = libnvme_alloc(min_log_size);
 	if (!log)
 		return -ENOMEM;
 
@@ -10807,7 +10807,7 @@ static int get_power_measurement_log(int argc, char **argv, struct command *acmd
 
 	/* If the log is larger, re-read with full size */
 	if (log_size > min_log_size) {
-		log = nvme_realloc(log, log_size);
+		log = libnvme_realloc(log, log_size);
 		if (!log)
 			return -ENOMEM;
 
@@ -10835,7 +10835,7 @@ static int get_log_offset(struct libnvme_transport_handle *hdl,
 	args->len = len;
 	*offset += args->len;
 
-	*log = nvme_realloc(*log, *offset);
+	*log = libnvme_realloc(*log, *offset);
 	if (!*log)
 		return -ENOMEM;
 
@@ -10904,7 +10904,7 @@ static int get_reachability_groups(struct libnvme_transport_handle *hdl, bool rg
 		.rae = rae,
 	};
 
-	log = nvme_alloc(log_len);
+	log = libnvme_alloc(log_len);
 	if (!log)
 		return -ENOMEM;
 
@@ -11015,7 +11015,7 @@ static int get_reachability_associations(struct libnvme_transport_handle *hdl, b
 		.rae = rae,
 	};
 
-	log = nvme_alloc(log_len);
+	log = libnvme_alloc(log_len);
 	if (!log)
 		return -ENOMEM;
 
@@ -11096,7 +11096,7 @@ static int get_host_discovery(struct libnvme_transport_handle *hdl, bool allhost
 		.rae = rae,
 	};
 
-	log = nvme_alloc(log_len);
+	log = libnvme_alloc(log_len);
 	if (!log)
 		return -ENOMEM;
 
@@ -11175,7 +11175,7 @@ static int get_ave_discovery(struct libnvme_transport_handle *hdl, bool rae, str
 		.rae = rae,
 	};
 
-	log = nvme_alloc(log_len);
+	log = libnvme_alloc(log_len);
 	if (!log)
 		return -ENOMEM;
 
@@ -11250,7 +11250,7 @@ static int get_pull_model_ddc_req(struct libnvme_transport_handle *hdl,
 		.rae = rae,
 	};
 
-	log = nvme_alloc(log_len);
+	log = libnvme_alloc(log_len);
 	if (!log)
 		return -ENOMEM;
 
