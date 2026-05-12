@@ -26,8 +26,6 @@ jobs:
       - name: Run blktests in VM
         id: blktests
         uses: ./.github/actions/kubevirt-action
-        env:
-          CODECOV_SLUG: linux-nvme/nvme-cli
         with:
           host_devices: "nvme-wdc-zn540,nvme-wdc-sn640"
           kernel_version: linus-master
@@ -93,6 +91,7 @@ jobs:
             gcovr -r . --object-directory .build-ci --xml-pretty -o coverage.xml
 
             CODECOV_VERSION="v0.8.0"
+            CODECOV_SLUG=linux-nvme/nvme-cli
             curl -Os "https://uploader.codecov.io/${CODECOV_VERSION}/linux/codecov"
             chmod +x codecov
             NODE_OPTIONS="--max-old-space-size=4096" ./codecov -t "${{ secrets.CODECOV_TOKEN }}" -f coverage.xml -X search || true
@@ -102,8 +101,6 @@ jobs:
       - name: Run nvme-cli tests in VM
         if: success() || steps.blktests.conclusion == 'failure'
         uses: ./.github/actions/kubevirt-action
-        env:
-          CODECOV_SLUG: linux-nvme/nvme-cli
         with:
           host_devices: "nvme-wdc-zn540,nvme-wdc-sn640"
           kernel_version: linus-master
@@ -136,6 +133,7 @@ jobs:
             scripts/build.sh -b release -c gcc -p tests
 
             CODECOV_VERSION="v0.8.0"
+            CODECOV_SLUG=linux-nvme/nvme-cli
             curl -Os "https://uploader.codecov.io/${CODECOV_VERSION}/linux/codecov"
             chmod +x codecov
             NODE_OPTIONS="--max-old-space-size=4096" ./codecov -t "$CODECOV_TOKEN" -f coverage.xml -X search || true
