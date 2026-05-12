@@ -26,6 +26,8 @@ jobs:
       - name: Run blktests in VM
         id: blktests
         uses: ./.github/actions/kubevirt-action
+        env:
+          CODECOV_SLUG: linux-nvme/nvme-cli
         with:
           host_devices: "nvme-wdc-zn540,nvme-wdc-sn640"
           kernel_version: linus-master
@@ -100,6 +102,8 @@ jobs:
       - name: Run nvme-cli tests in VM
         if: success() || steps.blktests.conclusion == 'failure'
         uses: ./.github/actions/kubevirt-action
+        env:
+          CODECOV_SLUG: linux-nvme/nvme-cli
         with:
           host_devices: "nvme-wdc-zn540,nvme-wdc-sn640"
           kernel_version: linus-master
