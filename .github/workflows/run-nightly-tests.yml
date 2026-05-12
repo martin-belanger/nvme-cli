@@ -91,10 +91,15 @@ jobs:
             gcovr -r . --object-directory .build-ci --xml-pretty -o coverage.xml
 
             CODECOV_VERSION="v0.8.0"
-            CODECOV_SLUG=linux-nvme/nvme-cli
             curl -Os "https://uploader.codecov.io/${CODECOV_VERSION}/linux/codecov"
             chmod +x codecov
-            NODE_OPTIONS="--max-old-space-size=4096" ./codecov -t "${{ secrets.CODECOV_TOKEN }}" -f coverage.xml -X search || true
+            NODE_OPTIONS="--max-old-space-size=4096" ./codecov \
+              -t "${{ secrets.CODECOV_TOKEN }}" \
+              -r "${{ github.repository }}" \
+              -B "${{ github.ref_name }}" \
+              -C "${{ github.sha }}" \
+              -f coverage.xml \
+              -X search || true
 
             exit "${blktests_status}"
 
@@ -133,10 +138,15 @@ jobs:
             scripts/build.sh -b release -c gcc -p tests
 
             CODECOV_VERSION="v0.8.0"
-            CODECOV_SLUG=linux-nvme/nvme-cli
             curl -Os "https://uploader.codecov.io/${CODECOV_VERSION}/linux/codecov"
             chmod +x codecov
-            NODE_OPTIONS="--max-old-space-size=4096" ./codecov -t "$CODECOV_TOKEN" -f coverage.xml -X search || true
+            NODE_OPTIONS="--max-old-space-size=4096" ./codecov \
+              -t "${{ secrets.CODECOV_TOKEN }}" \
+              -r "${{ github.repository }}" \
+              -B "${{ github.ref_name }}" \
+              -C "${{ github.sha }}" \
+              -f coverage.xml \
+              -X search || true
 
             EOF
 
