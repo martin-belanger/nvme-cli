@@ -695,6 +695,24 @@ __libnvme_public int libnvme_find_uuid(struct nvme_id_uuid_list *uuid_list,
 	return -ENOENT;
 }
 
+#ifndef NVME_HAVE_NETDB
+/*
+ * The no-netdb fallbacks below have no global context, but libnvme_msg()
+ * requires a non-NULL one (the ctx-first API convention); passing NULL makes
+ * __libnvme_msg() dereference it.  Spin up a throwaway context just to emit
+ * the diagnostic.
+ */
+static void log_no_netdb(const char *msg)
+{
+	struct libnvme_global_ctx *ctx = libnvme_create_global_ctx();
+
+	if (!ctx)
+		return;
+	libnvme_msg(ctx, LIBNVME_LOG_ERR, "%s", msg);
+	libnvme_free_global_ctx(ctx);
+}
+#endif /* NVME_HAVE_NETDB */
+
 #ifdef NVME_HAVE_NETDB
 static bool _nvme_ipaddrs_eq(struct sockaddr *addr1, struct sockaddr *addr2)
 {
@@ -766,8 +784,8 @@ ipaddrs_eq_fail:
 #else /* NVME_HAVE_NETDB */
 bool libnvme_ipaddrs_eq(const char *addr1, const char *addr2)
 {
-	libnvme_msg(NULL, LIBNVME_LOG_ERR, "no support for hostname ip address resolution; " \
-		"recompile with libnss support.\n");
+	log_no_netdb("no support for hostname ip address resolution; "
+		     "recompile with libnss support.\n");
 
 	return false;
 }
@@ -836,8 +854,8 @@ bool libnvme_iface_primary_addr_matches(const struct ifaddrs *iface_list,
 const char *libnvme_iface_matching_addr(const struct ifaddrs *iface_list,
 		const char *addr)
 {
-	libnvme_msg(NULL, LIBNVME_LOG_ERR, "no support for interface lookup; "
-		"recompile with libnss support.\n");
+	log_no_netdb("no support for interface lookup; "
+		     "recompile with libnss support.\n");
 
 	return NULL;
 }
@@ -845,8 +863,8 @@ const char *libnvme_iface_matching_addr(const struct ifaddrs *iface_list,
 bool libnvme_iface_primary_addr_matches(const struct ifaddrs *iface_list,
 		const char *iface, const char *addr)
 {
-	libnvme_msg(NULL, LIBNVME_LOG_ERR, "no support for interface lookup; "
-		"recompile with libnss support.\n");
+	log_no_netdb("no support for interface lookup; "
+		     "recompile with libnss support.\n");
 
 	return false;
 }
